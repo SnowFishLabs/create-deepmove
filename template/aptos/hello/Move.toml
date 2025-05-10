@@ -1,0 +1,16 @@
+[package]
+name = "{{package}}"
+version = "1.0.0"
+authors = []
+
+[addresses]
+{{package}} = "0x0"
+
+[dev-addresses]
+
+[dependencies-remote.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "mainnet"
+subdir = "aptos-framework"
+
+[dev-dependencies]
