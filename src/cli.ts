@@ -15,36 +15,12 @@ const LOGO = `
   DDDDDD  EEEEEEE EEEEEEE PP         MM    MM  OOOO0     VVV    EEEEEEE 
 `;
 
-const VARIANT_CHOICES_SUI = [
-    {
-        name: 'A simple coin contract',
-        value: 'coin',
-        module_name: 'hello_coin'
-    },
-    {
-        name: 'A simple hello contract',
-        value: 'hello',
-        module_name: 'hello'
-    },
-];
-
 const VARIANT_CHOICES_APTOS = [
     {
         name: 'A simple hello contract',
         value: 'hello',
         module_name: 'hello'
     },
-];
-
-const CHAIN_CHOICES = [
-    {
-        name: 'sui',
-        value: 'sui',
-    },
-    {
-        name: 'aptos',
-        value: 'aptos',
-    }
 ];
 
 async function main() {
@@ -70,30 +46,7 @@ async function main() {
 
     if (name.length === 0) throw new Error('Cannot initialize a project with an empty name');
 
-    const chainVariant =
-        CHAIN_CHOICES.map(e => e.value).indexOf(localArgs['--chain'] || '') !== -1
-            ? localArgs['--chain']
-            : undefined;
-
-    const chain: string =
-        chainVariant ||
-        (
-            await inquirer.prompt([
-                {
-                    name: 'chain',
-                    message: 'Choose the chain: ',
-                    type: 'list',
-                    choices: CHAIN_CHOICES,
-                },
-            ])
-        ).chain;
-
-    let VARIANT_CHOICES = VARIANT_CHOICES_SUI;
-    if (chain == "sui") {
-        VARIANT_CHOICES = VARIANT_CHOICES_SUI;
-    } else if (chain == "aptos") {
-        VARIANT_CHOICES = VARIANT_CHOICES_APTOS;
-    }
+    let VARIANT_CHOICES = VARIANT_CHOICES_APTOS;
 
     const argsVariant =
         VARIANT_CHOICES.map(e => e.value).indexOf(localArgs['--type'] || '') !== -1
@@ -126,6 +79,8 @@ async function main() {
 
     const steps = 3;
 
+    let chain: string = "aptos";
+
     console.log(`\n[1/${steps}] Copying files...`);
 
     let basePath = path.join(__dirname, 'template', chain, variant);
@@ -133,7 +88,7 @@ async function main() {
 
     let files = readDirDeepSync(basePath, { gitignore: false, ignore: [] });
 
-    if (chain == "sui" || chain == "aptos") {
+    if (chain == "aptos") {
         files.forEach(function (source_file) {
             let source = fs.readFileSync(source_file).toString();
             source = source.replace(/\{\{package\}\}/g, desiredProjectName);
